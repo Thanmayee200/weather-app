@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Weather App</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container{
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+h1{
+    margin-bottom: 15px;
+}
+
+input{
+    padding: 10px;
+    width: 70%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button{
+    padding: 10px 15px;
+    margin-top: 10px;
+    border: none;
+    background: #4facfe;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover{
+    background: #0077ff;
+}
+
+.result{
+    margin-top: 20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Weather App</h1>
+
+<input type="text" id="city" placeholder="Enter city name">
+<br><br>
+
+<button onclick="getWeather()">Search</button>
+
+<div class="result">
+<h2 id="cityName"></h2>
+<p id="temp"></p>
+<p id="result"></p>
+</div>
+
+</div>
+
+<script>
+
+async function getWeather(){
+
+    let city = document.getElementById("city").value.trim();
+
+    let apiKey = "9b1cc0d183d4b8d620cf088f77f73350";
+
+    let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    let response = await fetch(url);
+
+    let data = await response.json();
+
+    if(data.cod == 200){
+
+        document.getElementById("cityName").innerHTML = data.name;
+
+        document.getElementById("temp").innerHTML = 
+        "Temperature: " + data.main.temp + " °C";
+
+        document.getElementById("result").innerHTML = 
+        "Weather: " + data.weather[0].description;
+
+    } 
+    else {
+
+        document.getElementById("result").innerHTML = "City not found";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
