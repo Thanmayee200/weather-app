@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Weather App (Local)</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+      text-align: center;
+      padding-top: 50px;
+    }
+
+    .box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      display: inline-block;
+      width: 300px;
+    }
+
+    input {
+      padding: 10px;
+      width: 200px;
+    }
+
+    button {
+      padding: 10px;
+      background: blue;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    ul {
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>🌦️ Weather App (Local)</h2>
+
+  <input type="text" id="city" placeholder="Enter city" />
+  <button onclick="getWeather()">Search</button>
+
+  <h3 id="result"></h3>
+
+  <h4>Saved Searches:</h4>
+  <ul id="saved"></ul>
+</div>
+
+<script>
+// Simulated weather prediction based on random temperature
+function predictWeather(temp) {
+  if (temp > 35) return "Hot 🔥";
+  else if (temp > 25) return "Warm ☀️";
+  else if (temp > 15) return "Cool 🌤️";
+  else return "Cold ❄️";
+}
+
+// Save and load data from LocalStorage
+function saveWeather(city, temp, desc, prediction) {
+  const weatherData = JSON.parse(localStorage.getItem('weatherData')) || [];
+  weatherData.push({ city, temp, desc, prediction });
+  localStorage.setItem('weatherData', JSON.stringify(weatherData));
+  displaySaved();
+}
+
+function displaySaved() {
+  const weatherData = JSON.parse(localStorage.getItem('weatherData')) || [];
+  const savedList = document.getElementById('saved');
+  savedList.innerHTML = '';
+  weatherData.forEach(item => {
+    const li = document.createElement('li');
+    li.innerHTML = `${item.city} - ${item.temp}°C - ${item.desc} - ${item.prediction}`;
+    savedList.appendChild(li);
+  });
+}
+
+// Main function
+function getWeather() {
+  const city = document.getElementById("city").value.trim();
+  if (!city) return alert("Please enter a city name");
+
+  // Generate random temperature for simulation
+  const temp = Math.floor(Math.random() * 40); // 0-39°C
+  const descOptions = ["clear sky", "rainy", "cloudy", "stormy", "sunny"];
+  const desc = descOptions[Math.floor(Math.random() * descOptions.length)];
+  const prediction = predictWeather(temp);
+
+  document.getElementById("result").innerHTML =
+    `City: ${city} <br>
+     Temp: ${temp}°C <br>
+     Desc: ${desc} <br>
+     Prediction: ${prediction}`;
+
+  // Save locally
+  saveWeather(city, temp, desc, prediction);
+}
+
+// Display saved searches on page load
+displaySaved();
+</script>
+
+</body>
+</html>
